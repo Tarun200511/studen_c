@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+.next
+.env
+*.log
+.DS_Store
+coverage
+__pycache__
+*.pyc
+.pytest_cache
+venv
+.venv
+model/*.joblib
+model/*.pkl
+!model/.gitkeep

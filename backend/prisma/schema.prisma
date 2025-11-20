@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  name           String
+  password       String
+  role           String   @default("STUDENT")
+  photoUrl       String?
+  studentId      String?
+  department     String?
+  cgpa           Float?
+  bio            String?
+  phone          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  studentRecords StudentRecord[]
+  auditLogs      AuditLog[]
+  courses        Course[]
+  resumes        Resume[]
+}
+
+model StudentRecord {
+  id                   String   @id @default(uuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id])
+  studyHours           Float
+  attendance           Float
+  assignmentsCompleted Int
+  engagementScore      Float
+  pastMarks            String
+  predictedScore       Float
+  riskLevel            String
+  createdAt            DateTime @default(now())
+}
+
+model Course {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  courseName String
+  courseCode String
+  credits    Float
+  grade      String
+  semester   String
+  createdAt  DateTime @default(now())
+}
+
+model Resume {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  title      String
+  content    String   // JSON string
+  template   String   @default("modern")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ModelArtifact {
+  id        String   @id @default(uuid())
+  version   String
+  path      String
+  metrics   String   // JSON string
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+}
